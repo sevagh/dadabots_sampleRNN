@@ -505,10 +505,13 @@ def generate_and_save_samples(tag):
                 numpy.int32(t == FRAME_SIZE)
             )
 
-        samples[:, t] = sample_level_generate_fn(
-            frame_level_outputs[:, t % FRAME_SIZE],
-            samples[:, t-FRAME_SIZE:t],
-        )
+        try:
+            samples[:, t] = sample_level_generate_fn(
+                frame_level_outputs[:, t % FRAME_SIZE],
+                samples[:, t-FRAME_SIZE:t],
+            )
+        except:
+            pass
 
     total_time = time() - total_time
     log = "{} samples of {} seconds length generated in {} seconds."
@@ -705,8 +708,9 @@ while True:
         # 5. Generate and save samples (time consuming)
         # If not successful, we still have the params to sample afterward
         print "Sampling!",
+        print "skipping because it crashes!"
         # Generate samples
-        generate_and_save_samples(tag)
+        #generate_and_save_samples(tag)
         print "Done!"
 
         if total_iters-last_print_iters == PRINT_ITERS \
